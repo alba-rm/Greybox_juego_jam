@@ -11,7 +11,7 @@ public class TPSController : MonoBehaviour
     private float _vertical;
     //private Animator _animator;
     [SerializeField] private float _playerSpeed = 5;
-    [SerializeField] private float _jumpHeight = 1;
+    //[SerializeField] private float _jumpHeight = 0;
 
     private float _gravity = -9.81f;
     private Vector3 _playerGravity;
@@ -23,11 +23,14 @@ public class TPSController : MonoBehaviour
     [SerializeField] private float _sensorRadius = 0.2f;
     [SerializeField] private LayerMask _groundLayer;
     private bool _isGrounded;
+
+    private Health _health;
     
  void Awake()
     {
         _controller = GetComponent<CharacterController>();
         _camera = Camera.main.transform;
+        _health = GetComponent<Health>();
         //_animator = GetComponentInChildren<Animator>();
     }
 
@@ -64,11 +67,33 @@ public class TPSController : MonoBehaviour
         {
             _playerGravity.y = -2;
         }
-        if(_isGrounded && Input.GetButtonDown("Jump"))
+        /*if(_isGrounded && Input.GetButtonDown("Jump"))
         {
             _playerGravity.y = Mathf.Sqrt(_jumpHeight * -2 * _gravity);
-        }
+        }*/
         _playerGravity.y += _gravity * Time.deltaTime;
         _controller.Move(_playerGravity * Time.deltaTime);
+    }
+
+    public void Attack()
+    {
+        // Implementa la lógica de ataque del jugador aquí
+        // Por ejemplo, detectar colisiones con enemigos y llamar a su función TakeDamage
+        Collider[] hitEnemies = Physics.OverlapSphere(transform.position, _sensorRadius, LayerMask.GetMask("Enemy"));
+
+        foreach (Collider enemy in hitEnemies)
+        {
+            Health enemyHealth = enemy.GetComponent<Health>();
+            if (enemyHealth != null)
+            {
+                enemyHealth.TakeDamage(20); // Aquí puedes ajustar el daño que inflige el jugador
+            }
+        }
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, _sensorRadius);
     }
 }

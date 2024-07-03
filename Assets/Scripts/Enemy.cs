@@ -29,18 +29,26 @@ public class Enemy : MonoBehaviour
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        player = GameObject.FindWithTag("Player").transform;
-        playerHealth = player.GetComponent<Health>();
+        GameObject playerObject = GameObject.FindWithTag("Player");
+        if (playerObject != null)
+        {
+            player = playerObject.transform;
+            playerHealth = player.GetComponent<Health>();
+        }
     }
 
     void Start()
     {
-        SetRandomPoint(); // Establece el primer punto de patrulla al iniciar el juego
+        if (patrolPoints.Length > 0)
+        {
+            SetRandomPoint(); // Establece el primer punto de patrulla al iniciar el juego
+        }
         currentState = State.Patrolling; // Comienza patrullando
     }
     
     void Update()
     {
+        if (player == null) return; // Salir si no hay jugador
         switch (currentState)
         {
             case State.Patrolling:
@@ -96,11 +104,14 @@ public class Enemy : MonoBehaviour
 
     void Attack()
     {
-         // Controlar el cooldown entre ataques
+        // Controlar el cooldown entre ataques
         if (Time.time >= attackTimer)
         {
             // Reducir la salud del jugador
-            //playerHealth.TakeDamage(damage);
+            if (playerHealth != null)
+            {
+                playerHealth.Damage(damage); // Usar el método Damage en lugar de TakeDamage
+            }
 
             // Reiniciar el temporizador de cooldown
             attackTimer = Time.time + attackCooldown;
@@ -108,21 +119,21 @@ public class Enemy : MonoBehaviour
         // Aquí deberías implementar la lógica de ataque al jugador
         Debug.Log("Atacando al jugador");
 
-        // Puedes agregar aquí la lógica para infligir daño al jugador
-        // o realizar otras acciones relacionadas con el ataque
-
         // Después de atacar, vuelve a perseguir al jugador
         currentState = State.Chasing;
     }
 
     void SetRandomPoint()
     {
-        agent.destination = patrolPoints[Random.Range(0, patrolPoints.Length)].position;
+        if (patrolPoints.Length > 0)
+        {
+            agent.destination = patrolPoints[Random.Range(0, patrolPoints.Length)].position;
+        }
     }
 
     bool IsInRange(float range)
     {
-        return Vector3.Distance(transform.position, player.position) < range;
+        return player != null && Vector3.Distance(transform.position, player.position) < range;
     }
 
     void OnDrawGizmos()

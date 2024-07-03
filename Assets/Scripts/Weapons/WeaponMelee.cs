@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WeaponMelee : Weapon
@@ -10,31 +9,34 @@ public class WeaponMelee : Weapon
 
     protected override void OnActivate()
     {
-        StartCoroutine(this.Animate());
+        StartCoroutine(Animate());
 
-        Collider[] targets = Physics.OverlapSphere(this.hitSpot.position, this.range);
+        Collider[] hitEnemies = Physics.OverlapSphere(hitSpot.position, range);
 
-        foreach (var target in targets)
+        foreach (Collider enemy in hitEnemies)
         {
-            Health h = target.GetComponent<Health>();
-            if (h == null)
-                continue;
-
-            this.OnHit(h);
+            if (enemy.CompareTag("Enemy"))
+            {
+                Health h = enemy.GetComponent<Health>();
+                if (h != null)
+                {
+                    OnHit(h);
+                }
+            }
         }
     }
 
     IEnumerator Animate()
     {
-        this.gfx.localRotation = Quaternion.Euler(0, 0, -70);
+        gfx.localRotation = Quaternion.Euler(0, 0, -70);
 
-        yield return new WaitForSeconds(this.maxCooldownTime * 0.9f);
+        yield return new WaitForSeconds(maxCooldownTime * 0.9f);
 
-        this.gfx.localRotation = Quaternion.Euler(0, 0, 0);
+        gfx.localRotation = Quaternion.Euler(0, 0, 0);
     }
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(this.hitSpot.position, this.range);
+        Gizmos.DrawWireSphere(hitSpot.position, range);
     }
 }

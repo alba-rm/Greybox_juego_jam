@@ -4,14 +4,11 @@ using UnityEngine;
 
 public class TPSController : MonoBehaviour
 {
-    
-     private CharacterController _controller;
+    private CharacterController _controller;
     private Transform _camera;
     private float _horizontal;
     private float _vertical;
-    //private Animator _animator;
     [SerializeField] private float _playerSpeed = 5;
-    //[SerializeField] private float _jumpHeight = 0;
 
     private float _gravity = -9.81f;
     private Vector3 _playerGravity;
@@ -25,76 +22,78 @@ public class TPSController : MonoBehaviour
     private bool _isGrounded;
 
     private Health _health;
-    
- void Awake()
+
+    // Referencia al WeaponManager
+    private WeaponManager _weaponManager;
+
+    // Variable para rastrear la dirección actual
+    private bool _facingRight = true;
+
+    void Awake()
     {
         _controller = GetComponent<CharacterController>();
         _camera = Camera.main.transform;
         _health = GetComponent<Health>();
-        //_animator = GetComponentInChildren<Animator>();
+        _weaponManager = GetComponent<WeaponManager>(); // Asegúrate de que el WeaponManager está en el mismo GameObject
     }
 
     void Update()
     {
-
         _horizontal = Input.GetAxisRaw("Horizontal");
         _vertical = Input.GetAxisRaw("Vertical");
         Movement();
         Jump();
-        if (Input.GetButtonDown("Fire1"))
-            {
-                Attack();
-            
-            }
+        
+        // Atacar con el arma actual
+        if (Input.GetButtonDown("Fire1") && _weaponManager != null)
+        {
+            _weaponManager.currentWeapon?.Activate();
+        }
     }
-    
+
     void Movement()
     {
         Vector3 direction = new Vector3(_horizontal, 0, _vertical);
-        //_animator.SetFloat("VelX", 0);
-        //_animator.SetFloat("VelZ", direction.magnitude);
 
-        if(direction != Vector3.zero)
+        if (direction != Vector3.zero)
         {
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + _camera.eulerAngles.y;
             float smoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
             transform.rotation = Quaternion.Euler(0, smoothAngle, 0);
-            Vector3 moveDirection = Quaternion.Euler(0,targetAngle, 0) * Vector3.forward;
+            Vector3 moveDirection = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
             _controller.Move(moveDirection.normalized * _playerSpeed * Time.deltaTime);
+            
+            // Girar el personaje basado en la dirección de movimiento
+            if (_horizontal > 0 && !_facingRight)
+            {
+                Flip();
+            }
+            else if (_horizontal < 0 && _facingRight)
+            {
+                Flip();
+            }
         }
     }
 
     void Jump()
     {
         _isGrounded = Physics.CheckSphere(_sensorPosition.position, _sensorRadius, _groundLayer);
-        //_animator.SetBool("IsJumping", !_isGrounded);
 
-        if(_isGrounded && _playerGravity.y < 0)
+        if (_isGrounded && _playerGravity.y < 0)
         {
             _playerGravity.y = -2;
         }
-        /*if(_isGrounded && Input.GetButtonDown("Jump"))
-        {
-            _playerGravity.y = Mathf.Sqrt(_jumpHeight * -2 * _gravity);
-        }*/
+
         _playerGravity.y += _gravity * Time.deltaTime;
         _controller.Move(_playerGravity * Time.deltaTime);
     }
 
-    public void Attack()
+    void Flip()
     {
-        // Implementa la lógica de ataque del jugador aquí
-        // Por ejemplo, detectar colisiones con enemigos y llamar a su función TakeDamage
-        Collider[] hitEnemies = Physics.OverlapSphere(transform.position, _sensorRadius, LayerMask.GetMask("Enemy"));
-
-        foreach (Collider enemy in hitEnemies)
-        {
-            Health enemyHealth = enemy.GetComponent<Health>();
-            if (enemyHealth != null)
-            {
-                enemyHealth.TakeDamage(20); // Aquí puedes ajustar el daño que inflige el jugador
-            }
-        }
+        _facingRight = !_facingRight;
+        Vector3 theScale = transform.localScale;
+        theScale.x *= -1;
+        transform.localScale = theScale;
     }
 
     void OnDrawGizmosSelected()

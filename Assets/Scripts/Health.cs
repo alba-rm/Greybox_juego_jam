@@ -2,37 +2,55 @@ using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    public int maxHealth = 10;
-    private int currentHealth;
+    public float maxHealth;
 
-    void Start()
+    public float percent
     {
-        currentHealth = maxHealth;
+        get { return this.currentHealth / this.maxHealth; }
     }
 
-    public void TakeDamage(int damage)
+    protected float currentHealth;
+
+    /// ============================================
+    /// <summary>
+    ///
+    /// </summary>
+    protected virtual void Awake()
     {
-        currentHealth -= damage;
-        if (currentHealth <= 0)
+        this.currentHealth = this.maxHealth;
+    }
+
+    /// ============================================
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="amount"></param>
+    public virtual void Restore(float amount)
+    {
+        this.currentHealth = Mathf.Clamp(this.currentHealth + amount, 0, this.maxHealth);
+    }
+
+    /// ============================================
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="amount"></param>
+    public virtual void Damage(float amount)
+    {
+        this.currentHealth = Mathf.Clamp(this.currentHealth - amount, 0, this.maxHealth);
+
+        if (this.currentHealth == 0)
         {
-            Die();
+            this.Die();
         }
     }
 
-    void Die()
+    /// ============================================
+    /// <summary>
+    ///
+    /// </summary>
+    public virtual void Die()
     {
-        // Aquí puedes poner la lógica que quieres que ocurra cuando el personaje muera.
-        Debug.Log("El personaje ha muerto");
-        // Por ejemplo, podrías desactivar el objeto del personaje:
-        gameObject.SetActive(false);
-    }
-
-    public void Heal(int amount)
-    {
-        currentHealth += amount;
-        if (currentHealth > maxHealth)
-        {
-            currentHealth = maxHealth;
-        }
+        Destroy(this.gameObject);
     }
 }

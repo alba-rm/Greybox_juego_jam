@@ -100,7 +100,7 @@ public class Enemy : MonoBehaviour
         if (Time.time >= attackTimer)
         {
             // Reducir la salud del jugador
-            playerHealth.TakeDamage(damage);
+            //playerHealth.TakeDamage(damage);
 
             // Reiniciar el temporizador de cooldown
             attackTimer = Time.time + attackCooldown;

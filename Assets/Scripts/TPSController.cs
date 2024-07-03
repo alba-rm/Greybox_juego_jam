@@ -36,10 +36,16 @@ public class TPSController : MonoBehaviour
 
     void Update()
     {
+
         _horizontal = Input.GetAxisRaw("Horizontal");
         _vertical = Input.GetAxisRaw("Vertical");
         Movement();
         Jump();
+        if (Input.GetButtonDown("Fire1"))
+            {
+                Attack();
+            
+            }
     }
     
     void Movement()

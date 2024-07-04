@@ -9,7 +9,7 @@ public class Health : MonoBehaviour
         get { return this.currentHealth / this.maxHealth; }
     }
 
-    protected float currentHealth;
+    public float currentHealth; // Cambiado a público para que HeartManager pueda acceder.
 
     /// ============================================
     /// <summary>
@@ -53,4 +53,5 @@ public class Health : MonoBehaviour
     {
         Destroy(this.gameObject);
     }
+
 }

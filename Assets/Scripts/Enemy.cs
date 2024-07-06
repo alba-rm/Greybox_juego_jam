@@ -26,15 +26,29 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float attackCooldown = 2f; // Tiempo de espera entre ataques
     private float attackTimer = 0f; // Temporizador para controlar el cooldown
 
+    private GameController gameController;
+    Animator anim;
+
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         GameObject playerObject = GameObject.FindWithTag("Player");
+        anim = GetComponentInChildren<Animator>();
+
         if (playerObject != null)
         {
             player = playerObject.transform;
             playerHealth = player.GetComponent<Health>();
         }
+
+        // Encuentra el GameController
+        GameObject gameControllerObject = GameObject.FindWithTag("GameController");
+        if (gameControllerObject != null)
+        {
+            gameController = gameControllerObject.GetComponent<GameController>();
+        }
+
+
     }
 
     void Start()
@@ -61,6 +75,8 @@ public class Enemy : MonoBehaviour
                 Attack();
                 break;
         }
+        anim.SetFloat("VelX", 0);
+        anim.SetFloat("VelZ", agent.velocity.magnitude);
     }
 
     void Patrol()
@@ -150,5 +166,14 @@ public class Enemy : MonoBehaviour
 
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
+    }
+
+    void OnDestroy()
+    {
+        // Notificar al GameController que este enemigo ha sido destruido
+        if (gameController != null)
+        {
+            gameController.EnemyKilled();
+        }
     }
 }

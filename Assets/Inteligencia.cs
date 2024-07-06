@@ -7,9 +7,14 @@ public class Inteligencia : MonoBehaviour
 {
     public NPCConversation myConversation;
 
+    private void Update()
+    {
+        OnMouseOver();
+    }
+
     private void OnMouseOver()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetButton("Fire2"))
         {
             ConversationManager.Instance.StartConversation(myConversation);
         }

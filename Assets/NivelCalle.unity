@@ -1515,7 +1515,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 2196f223c43059549abdcd8e3ce0e62c, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: f1a4499b17023234e872656bcc176f06, type: 2}
   m_BuildHeightMesh: 0
 --- !u!4 &1215930148
 Transform:
@@ -2122,6 +2122,7 @@ GameObject:
   - component: {fileID: 1613154289}
   - component: {fileID: 1613154294}
   - component: {fileID: 1613154295}
+  - component: {fileID: 1613154296}
   m_Layer: 0
   m_Name: Prota
   m_TagString: Player
@@ -2283,6 +2284,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentWeapon: {fileID: 0}
   weaponHolder: {fileID: 349058952}
+--- !u!95 &1613154296
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1613154288}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 08e3a404e61eb944ba4eed82f78a7c01, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1631227979
 GameObject:
   m_ObjectHideFlags: 3

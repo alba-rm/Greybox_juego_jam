@@ -23,18 +23,20 @@ public class TPSController : MonoBehaviour
 
     private Health _health;
 
+    private Animator _animator;
+
     // Referencia al WeaponManager
     private WeaponManager _weaponManager;
 
-    // Variable para rastrear la dirección actual
-    private bool _facingRight = true;
+    
 
     void Awake()
     {
         _controller = GetComponent<CharacterController>();
         _camera = Camera.main.transform;
         _health = GetComponent<Health>();
-        _weaponManager = GetComponent<WeaponManager>(); // Asegúrate de que el WeaponManager está en el mismo GameObject
+        _weaponManager = GetComponent<WeaponManager>();
+        _animator = GetComponentInChildren<Animator>();
     }
 
     void Update()
@@ -54,6 +56,8 @@ public class TPSController : MonoBehaviour
     void Movement()
     {
         Vector3 direction = new Vector3(_horizontal, 0, _vertical);
+        _animator.SetFloat("VelX", 0);
+        _animator.SetFloat("VelZ", direction.magnitude);
 
         if (direction != Vector3.zero)
         {
@@ -63,15 +67,6 @@ public class TPSController : MonoBehaviour
             Vector3 moveDirection = Quaternion.Euler(0, targetAngle, 0) * Vector3.forward;
             _controller.Move(moveDirection.normalized * _playerSpeed * Time.deltaTime);
             
-            // Girar el personaje basado en la dirección de movimiento
-            if (_horizontal > 0 && !_facingRight)
-            {
-                Flip();
-            }
-            else if (_horizontal < 0 && _facingRight)
-            {
-                Flip();
-            }
         }
     }
 
@@ -86,14 +81,6 @@ public class TPSController : MonoBehaviour
 
         _playerGravity.y += _gravity * Time.deltaTime;
         _controller.Move(_playerGravity * Time.deltaTime);
-    }
-
-    void Flip()
-    {
-        _facingRight = !_facingRight;
-        Vector3 theScale = transform.localScale;
-        theScale.x *= -1;
-        transform.localScale = theScale;
     }
 
     void OnDrawGizmosSelected()

@@ -10,6 +10,11 @@ public class WeaponManager : MonoBehaviour
 
     public bool HasRoomForWeapon => this.currentWeapon == null;
 
+    private AudioSource audioSource; // Referencia al AudioSource para sonidos de arma
+
+    // AudioClip para el sonido de ataque
+    [SerializeField] private AudioClip attackSound;
+
     void Start()
     {
         Weapon[] weapons = this.GetComponentsInChildren<Weapon>();
@@ -17,19 +22,28 @@ public class WeaponManager : MonoBehaviour
         {
             this.PickUpWeapon(w);
         }
+
+        // Obtener componente AudioSource del GameObject que tiene el WeaponManager
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Update()
     {
-        if (Input.GetButton("Fire1"))
+        if (Input.GetButtonDown("Fire1"))
         {
             if (this.currentWeapon != null)
             {
                 this.currentWeapon.Activate();
+
+                // Reproducir sonido de ataque
+                if (attackSound != null && audioSource != null)
+                {
+                    audioSource.PlayOneShot(attackSound);
+                }
             }
         }
 
-        if (Input.GetButton("Fire2"))
+        if (Input.GetButtonDown("Fire2"))
         {
             if (this.currentWeapon != null)
             {

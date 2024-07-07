@@ -240,6 +240,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentWeapon: {fileID: 0}
   weaponHolder: {fileID: 3127138906772357019}
+  attackSound: {fileID: 8300000, guid: 0ba3adb0e0929724ba13b36cd5e2cbeb, type: 3}
 --- !u!95 &2632849753216766066
 Animator:
   serializedVersion: 5

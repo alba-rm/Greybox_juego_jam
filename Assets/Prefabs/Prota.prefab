@@ -213,6 +213,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 5
   currentHealth: 5
+  isPlayer: 1
 --- !u!114 &6818320934012630242
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -99,7 +99,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 2.6
-  m_Speed: 3.5
+  m_Speed: 2
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -126,10 +126,10 @@ MonoBehaviour:
   currentState: 0
   patrolPoints:
   - {fileID: 0}
-  detectionRange: 10
+  detectionRange: 8
   attackRange: 1.2
   damage: 1
-  attackCooldown: 1
+  attackCooldown: 3
 --- !u!114 &8467547957198789961
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -142,8 +142,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ece227934f1f374db80222f598c6f35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 1
-  currentHealth: 1
+  maxHealth: 2
+  currentHealth: 2
+  isPlayer: 0
 --- !u!114 &3852599076956559023
 MonoBehaviour:
   m_ObjectHideFlags: 0

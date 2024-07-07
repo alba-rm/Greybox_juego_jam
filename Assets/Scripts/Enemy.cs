@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class Enemy : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class Enemy : MonoBehaviour
         Chasing,
         Attacking
     }
-    
+
     public State currentState;
 
     private NavMeshAgent agent;
@@ -21,7 +22,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float attackRange = 5;
 
     private Health playerHealth;
-    [SerializeField] private int damage = 5;
+    [SerializeField] private int damage = 1;
 
     [SerializeField] private float attackCooldown = 2f; // Tiempo de espera entre ataques
     private float attackTimer = 0f; // Temporizador para controlar el cooldown
@@ -47,8 +48,6 @@ public class Enemy : MonoBehaviour
         {
             gameController = gameControllerObject.GetComponent<GameController>();
         }
-
-
     }
 
     void Start()
@@ -59,10 +58,19 @@ public class Enemy : MonoBehaviour
         }
         currentState = State.Patrolling; // Comienza patrullando
     }
-    
+
     void Update()
     {
         if (player == null) return; // Salir si no hay jugador
+
+        // Verifica si el jugador está muerto
+        if (playerHealth != null && playerHealth.IsDead())
+        {
+            // Detener cualquier acción adicional si el jugador está muerto
+            agent.isStopped = true;
+            return;
+        }
+
         switch (currentState)
         {
             case State.Patrolling:
@@ -119,25 +127,26 @@ public class Enemy : MonoBehaviour
     }
 
     void Attack()
+{
+    // Controlar el cooldown entre ataques
+    if (Time.time >= attackTimer)
     {
-        // Controlar el cooldown entre ataques
-        if (Time.time >= attackTimer)
+        // Reducir la salud del jugador
+        if (playerHealth != null)
         {
-            // Reducir la salud del jugador
-            if (playerHealth != null)
-            {
-                playerHealth.Damage(damage); // Usar el método Damage en lugar de TakeDamage
-            }
-
-            // Reiniciar el temporizador de cooldown
-            attackTimer = Time.time + attackCooldown;
+            playerHealth.Damage((float)damage); // Usar el método Damage con float
         }
-        // Aquí deberías implementar la lógica de ataque al jugador
-        Debug.Log("Atacando al jugador");
 
-        // Después de atacar, vuelve a perseguir al jugador
-        currentState = State.Chasing;
+        // Reiniciar el temporizador de cooldown
+        attackTimer = Time.time + attackCooldown;
     }
+    // Aquí deberías implementar la lógica de ataque al jugador
+    Debug.Log("Atacando al jugador");
+
+    // Después de atacar, vuelve a perseguir al jugador
+    currentState = State.Chasing;
+}
+
 
     void SetRandomPoint()
     {
@@ -160,7 +169,7 @@ public class Enemy : MonoBehaviour
         {
             Gizmos.DrawWireSphere(point.position, 1f);
         }
-        
+
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
 

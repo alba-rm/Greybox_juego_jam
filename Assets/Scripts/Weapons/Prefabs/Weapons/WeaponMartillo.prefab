@@ -109,7 +109,7 @@ Transform:
   m_GameObject: {fileID: 3231811909625613696}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.26, y: 0.03, z: 0.07}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -165,5 +165,5 @@ MonoBehaviour:
   maxCooldownTime: 2
   damage: 3
   hitSpot: {fileID: 1462563394004827971}
-  range: 1
+  range: 3
   gfx: {fileID: 6662532119380651945}
